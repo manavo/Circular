@@ -6330,8 +6330,13 @@ Circular.App = {
 		});
 		
 		$(".signin").click(function(){
+                        var url = "api/oauth.php?start=1";
+                        if (Circular.Utils.getParameterByName('p')) {
+                            url += "&p="+encodeURIComponent(Circular.Utils.getParameterByName('p'));
+                        }
+                        
 			$.ajax({
-				url: "api/oauth.php?start=1", 
+				url: url, 
 				success: function(data){
 					if (data && data.authurl) {
 						// Start the OAuth dance:

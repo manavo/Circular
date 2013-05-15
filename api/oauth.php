@@ -47,6 +47,10 @@ function request_token($tmhOAuth) {
 	);
 	
 	if ($code == 200) {
+                if (!empty($_GET['p'])) {
+                    $_SESSION['post'] = $_GET['p'];
+                }
+                
 		$_SESSION['oauth'] = $tmhOAuth->extract_params($tmhOAuth->response['response']);
 		if (isset($_SESSION['account']['id'])) {
 			// We already have a logged in user account
@@ -170,8 +174,14 @@ function access_token($tmhOAuth) {
 			$_SESSION['account']['users'][(string) $user] = array();
 		}
 		
+                $url = APP_URL;
+                
+                if (isset($_SESSION['post'])) {
+                    $url .= '?p='.urlencode($_SESSION['post']);
+                    unset($_SESSION['post']);
+                }
 		
-		header('Location: ' . APP_URL);
+		header('Location: ' . $url);
 	}
 	else {
 		outputError($tmhOAuth);
